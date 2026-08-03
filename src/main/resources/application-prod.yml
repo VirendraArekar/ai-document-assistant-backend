@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: backend
+
+server:
+  port: ${SERVER_PORT:8080}
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:}
+
+# Production-specific settings
+logging:
+  level:
+    root: INFO
+    com.virendra.aiassistant: INFO

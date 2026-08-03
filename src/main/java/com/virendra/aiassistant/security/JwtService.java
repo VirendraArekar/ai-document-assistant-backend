@@ -4,6 +4,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +15,28 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    private static final String SECRET =
-            "mysecretkeymysecretkeymysecretkeymysecretkey12345";
+    @Value("${app.jwt.secret:}")
+    private String secret;
 
-    private final SecretKey key =
-            Keys.hmacShaKeyFor(SECRET.getBytes());
+    private SecretKey key;
+
+    @PostConstruct
+    public void init() {
+        if (secret == null || secret.isBlank()) {
+            throw new IllegalArgumentException(
+                "JWT_SECRET environment variable is not set. " +
+                "Set it before running the application: " +
+                "Windows: set JWT_SECRET=your-secret-key | " +
+                "Linux/Mac: export JWT_SECRET=your-secret-key"
+            );
+        }
+        if (secret.length() < 32) {
+            throw new IllegalArgumentException(
+                "JWT_SECRET must be at least 32 characters long for HS256 encryption"
+            );
+        }
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+    }
 
     public String generateToken(UserDetails userDetails) {
 
