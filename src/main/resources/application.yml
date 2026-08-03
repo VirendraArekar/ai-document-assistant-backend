@@ -26,8 +26,3 @@ server:
 
   port: 8080
 
-ai:
-  key: AQ.Ab8RN6LDqoJY2v_Wi_QZyPnMWKCXG-ggvjgMEaA0HdtY0g5loQ
-  name: 'Gemini API Key'
-  project_name: projects/879648916497
-  project_number: 879648916497
