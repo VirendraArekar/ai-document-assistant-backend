@@ -1,5 +1,6 @@
 package com.virendra.aiassistant.document.service;
 
+import com.virendra.aiassistant.ai.service.TikaService;
 import com.virendra.aiassistant.auth.entity.User;
 import com.virendra.aiassistant.auth.repository.UserRepository;
 import com.virendra.aiassistant.document.dto.DocumentResponse;
@@ -29,6 +30,14 @@ public class DocumentService {
     private final DocumentRepository documentRepository;
     private final FileStorageUtil fileStorageUtil;
     private final FileValidator fileValidator;
+    private final TikaService tikaService;
+
+    private String generatePreview(String extractedText) {
+        if (extractedText == null || extractedText.isBlank()) {
+            return "";
+        }
+        return extractedText.substring(0, Math.min(300, extractedText.length()));
+    }
 
     public DocumentResponse upload(
             MultipartFile file,
@@ -43,12 +52,15 @@ public class DocumentService {
 
         String path = fileStorageUtil.save(file);
 
+        String extractedText = tikaService.extractText(path);
+
         Document document = Document.builder()
                 .fileName(file.getOriginalFilename())
                 .originalFileName(file.getOriginalFilename())
                 .fileType(file.getContentType())
                 .fileSize(file.getSize())
                 .filePath(path)
+                .extractedText(extractedText)
                 .user(user)
                 .build();
 
@@ -61,6 +73,10 @@ public class DocumentService {
                 .fileType(document.getFileType())
                 .fileSize(document.getFileSize())
                 .uploadedAt(document.getUploadedAt())
+//                .preview(generatePreview(document.getExtractedText()))
+                .preview(document.getExtractedText()==null ? "" :
+                                document.getExtractedText()
+                                        .substring(0,Math.min(300,document.getExtractedText().length())))
                 .build();
     }
 
@@ -117,6 +133,8 @@ public class DocumentService {
                         .fileSize(document.getFileSize())
 
                         .uploadedAt(document.getUploadedAt())
+
+                        .preview(generatePreview(document.getExtractedText()))
 
                         .build()
 
@@ -229,7 +247,33 @@ public class DocumentService {
 
                 .uploadedAt(document.getUploadedAt())
 
+                .preview(generatePreview(document.getExtractedText()))
+
                 .build();
+
+    }
+
+    public String getDocumentText(
+
+            Long id,
+
+            String email
+
+    ){
+
+        Document document=
+
+                documentRepository.findById(id)
+
+                        .orElseThrow(()->
+
+                                new RuntimeException("Document not found"));
+
+        if(!document.getUser().getEmail().equals(email))
+
+            throw new RuntimeException("Unauthorized");
+
+        return document.getExtractedText();
 
     }
 }

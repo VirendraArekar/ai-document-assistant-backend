@@ -23,4 +23,6 @@ public class DocumentResponse {
 
     private LocalDateTime uploadedAt;
 
+    private String preview;
+
 }

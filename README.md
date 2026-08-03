@@ -544,8 +544,100 @@ mvn spring-boot:run -Dspring-boot.run.arguments="--debug"
 
 - **Email:** (Any registered email)
 - **Password:** (User's password)
+- **JWT Secret:** `mysecretkeymysecretkeymysecretkeymysecretkey12345` (dev default)
 
-⚠️ **Change JWT secret in production!** (See `JwtService.java`)
+---
+
+## Security: JWT Secret Management
+
+### Development (Default)
+
+Uses hardcoded secret in `application.properties`:
+```properties
+app.jwt.secret=mysecretkeymysecretkeymysecretkeymysecretkey12345
+```
+
+No environment variable needed.
+
+```bash
+mvn -DskipTests spring-boot:run
+```
+
+### Production (Required)
+
+**MUST set `JWT_SECRET` environment variable before running!**
+
+**Step 1: Generate Strong Secret (32+ characters)**
+
+Windows PowerShell:
+```powershell
+$secret = -join ((65..90) + (97..122) + (48..57) | Get-Random -Count 50 | ForEach-Object {[char]$_})
+Write-Output $secret
+```
+
+Linux/Mac:
+```bash
+openssl rand -base64 32
+```
+
+**Step 2: Set Environment Variable**
+
+Windows (Command Prompt):
+```cmd
+set JWT_SECRET=your-generated-secret-key-here
+```
+
+Windows (PowerShell):
+```powershell
+$env:JWT_SECRET='your-generated-secret-key-here'
+```
+
+Linux/Mac:
+```bash
+export JWT_SECRET='your-generated-secret-key-here'
+```
+
+**Step 3: Run with Production Profile**
+
+```bash
+mvn spring-boot:run -Dspring-boot.run.arguments="--spring.profiles.active=prod"
+```
+
+**If JWT_SECRET is not set → Application fails to start with error:**
+```
+IllegalArgumentException: JWT_SECRET environment variable is not set.
+```
+
+### CI/CD Pipeline
+
+**GitHub Actions Example:**
+```yaml
+- name: Run Application
+  env:
+    JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  run: mvn spring-boot:run -Dspring-boot.run.arguments="--spring.profiles.active=prod"
+```
+
+**GitLab CI Example:**
+```yaml
+run:
+  variables:
+    JWT_SECRET: $JWT_SECRET  # Set in GitLab Secrets
+  script:
+    - mvn spring-boot:run -Dspring-boot.run.arguments="--spring.profiles.active=prod"
+```
+
+### Security Checklist
+
+- ✅ Secret NOT hardcoded in `application-prod.yml`
+- ✅ Secret MUST be set via `JWT_SECRET` env var
+- ✅ App fails if secret missing (fail-safe)
+- ✅ Secret minimum 32 characters enforced
+- ✅ `.gitignore` prevents accidental commits
+- ✅ Secrets stored in CI/CD, not in repo
+- ✅ Secret rotatable via env var change
+
+⚠️ **Change JWT secret in production!** Default is for development only.
 
 ---
 

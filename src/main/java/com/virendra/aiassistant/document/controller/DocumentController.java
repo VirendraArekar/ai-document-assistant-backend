@@ -160,4 +160,27 @@ public class DocumentController {
                 .body(resource);
 
     }
+
+    @GetMapping("/{id}/text")
+    public ResponseEntity<String> getText(
+
+            @PathVariable Long id,
+
+            Authentication authentication
+
+    ){
+
+        return ResponseEntity.ok(
+
+                documentService.getDocumentText(
+
+                        id,
+
+                        authentication.getName()
+
+                )
+
+        );
+
+    }
 }

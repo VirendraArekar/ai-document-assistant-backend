@@ -34,6 +34,9 @@ public class Document {
     @Column(nullable = false)
     private String filePath;
 
+    @Column(columnDefinition = "TEXT")
+    private String extractedText;
+
     @Builder.Default
     private LocalDateTime uploadedAt = LocalDateTime.now();
 
