@@ -469,28 +469,45 @@ curl -X DELETE \
 
 ```
 src/main/java/com/virendra/aiassistant/
+├── ai/
+│   ├── controller/
+│   ├── dto/
+│   ├── entity/
+│   ├── repository/
+│   ├── service/
+│   └── util/
 ├── auth/
-│   ├── controller/    # AuthController (register, login)
-│   ├── service/       # AuthenticationService
-│   ├── entity/        # User, Role
-│   ├── dto/          # RegisterRequest, LoginRequest, AuthResponse
-│   └── repository/    # UserRepository
+│   ├── controller/
+│   ├── dto/
+│   ├── entity/
+│   ├── repository/
+│   └── service/
+├── config/
+│   ├── EmbeddingConfig.java
+│   ├── GeminiConfig.java
+│   └── PasswordConfig.java
 ├── document/
-│   ├── controller/    # DocumentController (upload, list, download, delete)
-│   ├── service/       # DocumentService
-│   ├── entity/        # Document
-│   ├── dto/          # DocumentResponse
-│   ├── repository/    # DocumentRepository
-│   └── util/         # FileStorageUtil, FileValidator
-├── security/
-│   ├── JwtAuthenticationFilter   # JWT token validation
-│   ├── JwtService               # Token generation & parsing
-│   ├── SecurityConfig           # Spring Security configuration
-│   ├── CustomUserDetails        # User details implementation
-│   └── CustomUserDetailsService # Load user by email
+│   ├── controller/
+│   ├── dto/
+│   ├── entity/
+│   ├── repository/
+│   ├── service/
+│   └── util/
+├── exception/
+│   └── GlobalExceptionHandler.java
 ├── health/
-│   └── controller/    # HealthController (health check)
-└── AiAssistantApplication.java  # Main entry point
+│   └── HealthController.java
+├── security/
+│   ├── CustomUserDetails.java
+│   ├── CustomUserDetailsService.java
+│   ├── JwtAuthenticationFilter.java
+│   ├── JwtService.java
+│   └── SecurityConfig.java
+├── user/
+│   ├── controller/
+│   ├── dto/
+│   └── service/
+└── AiAssistantApplication.java
 ```
 
 ---
