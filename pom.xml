@@ -22,7 +22,7 @@
         <java.version>17</java.version>
         <langchain4j.version>1.18.0</langchain4j.version>
         <jjwt.version>0.12.6</jjwt.version>
-        <tika.version>3.2.1</tika.version>
+        <tika.version>3.2.2</tika.version>
     </properties>
 
     <dependencies>
