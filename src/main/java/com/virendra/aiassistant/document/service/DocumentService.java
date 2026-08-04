@@ -1,5 +1,6 @@
 package com.virendra.aiassistant.document.service;
 
+import com.virendra.aiassistant.ai.service.EmbeddingService;
 import com.virendra.aiassistant.ai.service.TikaService;
 import com.virendra.aiassistant.auth.entity.User;
 import com.virendra.aiassistant.auth.repository.UserRepository;
@@ -28,6 +29,7 @@ public class DocumentService {
 
     private final UserRepository userRepository;
     private final DocumentRepository documentRepository;
+    private final EmbeddingService embeddingService;
     private final FileStorageUtil fileStorageUtil;
     private final FileValidator fileValidator;
     private final TikaService tikaService;
@@ -64,7 +66,14 @@ public class DocumentService {
                 .user(user)
                 .build();
 
-        documentRepository.save(document);
+        document = documentRepository.save(document);
+
+        /*
+         * Split the extracted text into chunks.
+         * Later this method will generate embeddings
+         * and store them in pgvector.
+         */
+        embeddingService.processDocument(document);
 
         return DocumentResponse.builder()
                 .id(document.getId())

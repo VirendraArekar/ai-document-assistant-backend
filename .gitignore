@@ -38,3 +38,8 @@ build/
 ### VS Code ###
 .vscode/
 /uploads/*
+.ollamassist/
+src/main/resources/static/uploads/*
+src/main/resources/application.properties
+src/main/resources/application.yml
+src/main/resources/application-prod.yml

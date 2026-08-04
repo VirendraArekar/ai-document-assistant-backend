@@ -225,7 +225,8 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
   "originalFileName": "document.pdf",
   "fileType": "application/pdf",
   "fileSize": 2048,
-  "uploadedAt": "2026-08-03T23:10:59.181"
+  "uploadedAt": "2026-08-03T23:10:59.181",
+  "preview": "\n. \n\n. \n\n \n\n \n\nVirendra Minanath Arekar \n\n virendra.arekar@gmail.com   in/virendra-arekar-2a9a6292 \n\n \n\n \n\nPROFESSIONAL SUMMARY \n\nResults-driven Full Stack Developer with over 9 years of experience specializing in the MERN stack (MongoDB, Express.js, React.js, Node.js) ,  \nSpringBoot, G"
 }
 ```
 
@@ -370,6 +371,55 @@ curl -X DELETE \
 **Response (200 OK):**
 ```json
 "Document deleted successfully"
+```
+
+---
+
+## 4. AI APIs
+
+All AI endpoints require JWT authentication in the header:
+```
+Authorization: Bearer {token}
+```
+
+### 4.1 Chat with Document
+
+**Endpoint:** `POST /api/ai/chat`
+
+**Authentication:** Required (Bearer Token)
+
+**Description:** Send a message/prompt to the AI about a specific document and get a response.
+
+**Request Body:**
+```json
+{
+  "documentId": 1,
+  "message": "Can you summarize this document for me?"
+}
+```
+
+**Parameters:**
+| Field | Type | Required | Description |
+|------------|---------|----------|---------------------------------------|
+| documentId | integer | Yes | The ID of the document to chat about. |
+| message | string | Yes | The user's message or prompt. |
+
+**Curl Example:**
+```bash
+curl -X POST http://localhost:8080/api/ai/chat \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "documentId": 1,
+    "message": "Can you summarize this document for me?"
+  }'
+```
+
+**Response (200 OK):**
+```json
+{
+  "reply": "Certainly! This document is a resume for a Full Stack Developer with over 9 years of experience specializing in the MERN stack and Spring Boot..."
+}
 ```
 
 ---
